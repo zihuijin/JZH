@@ -1,0 +1,141 @@
+运行环境:
+	os: Ubuntu
+	语言: python3.6 (代码必须运行在python3上)
+	需要安装的包：scrapy, selenium, pyvirtualdisplay, urllib
+pip3 install  pandas selenium pyvirtualdisplay
+sudo apt install xvfb
+
+Selenium和chromedriver的安装完整教程:
+http://blog.csdn.net/zhaoyabei/article/details/52355021
+
+chromedriver下载地址：https://sites.google.com/a/chromium.org/chromedriver/downloads
+
+uncompress it then put it to path dir
+
+
+其中有chrome的安装，如果在服务器里使用了chrome作为selenium的浏览器，请安装pyvirtualdisplay，并在初始化driver代码前加入如下代码，用于取消浏览器图形化:
+display = Display(visible=0, size=(800, 800))
+display.start()
+
+
+亚马逊:
+1.	目前存档位置和路径
+
+a)	之前爬的1001类数据，放在了150的服务器上/home/zhangyt/ShopCrawler/amazon，后文目录，以此目录为根目录。1001.csv是已经抽取好的，但是没有去重；1001.tar.gz是压缩过的元网页数据。
+
+b)	亚马逊爬虫的代码保存在/code目录下，urlCrawler为类别目录爬虫，goodsCrawler为商品详细页爬虫，extract为抽取信息文件。之前的压缩文件大小的代码整合在了goodsCrawler里面。其中根目录下的aa.csv是urlCrawler的配置文件。
+
+
+c)	已爬url文件在aws ubuntu@54.223.112.226 (3awscn.crawler.sh) 目录下的/home/ubuntu/Linge里面，以类别代码命名，有子类的会以’类别代码_子类.txt’命名。还有一部分在aws ubuntu@54.223.210.254 (4digital.sh) 目录/mnt/sdc1/Linge/list 下面，不过因为只有四类，可以考虑不要。
+
+d)	第一类的原始数据未压缩版，在aws ubuntu@54.223.210.254 (4digital.sh) 目录/mnt/sdc1/Linge/amazon/1001这个文件夹里，约15GB。
+
+e)	目前爬虫文件部署在aws ubuntu@54.223.112.226 (3awscn.crawler.sh) 目录下的/home/ubuntu/Linge里面。
+
+2.	代码说明
+
+a)	urlCrawler: 
+此文件使用selenium模拟浏览器，且因为亚马逊的屏蔽措施，爬取间隔必须在5秒以上。该代码的配置文件’aa.csv’，主要读取表格中最后的链接作为每类的链接输入。如有子类，便从子类开始爬。（所以如果要多台机器爬，可以分割aa.csv）
+输出为以类别代码命名的txt文件，每个获取的url为一行。
+
+该文件可以通过save.csv进行自动存储，并在程序断掉以后，重新从存储位置开始。save.csv的格式为’int url int’以空格分割，第一个int为aa.csv的第几行（也就是第几个类）,url为当前爬去的url，第二个int为第几页。这里有个问题，如果是在一类的最后一页，最后一个商品时程序断掉的，需要人工书写save,csv，让其能读入下一类。
+
+如果时从头开始，不需要读save.csv文件，需要将程序中，靠头的全局变量’saveFlag’改为’False’。
+		
+b)	goodsCrawler:
+
+原理同上，不需要aa.csv文件，输入格式为urlCrawler的输出格式，一个文件夹里只放着urlCrawler的输出文件就可以。输出格式为类别代码作为文件夹，然后将商品页面按数字顺序命名，输出到类别代码的文件夹了。
+
+Save.csv同上问，格式为’int,int’英文逗号分割，前者为第int个文本（第int个分类），后者为读取到该文本的第几行(第几个url)。同理如果从头开始，不需要读save.csv文件，需将程序中，靠头的全局变量’saveFlag’改为’False’。
+
+
+c)	extract：
+
+这个文件没什么好说的，输入为包含html的txt文档，输入为csv。注意要手动更改代码里的目录路径，路径应为goodsCrawler输出的，以类别代码命名的文件夹。
+		输出后的第一行标题需要人工添加，为: 
+ID,keywords,title,price,label,sales_rank_of_lable,label_list,sales_rank_of_list,feature_bullets,product_description,product_details
+		用写字板打开，然后粘贴复制到第一行就可以。
+
+3.	遗留问题
+
+a)	不能保证抽取文件能成功抽取所有的信息。尤其不同类别之间，会因为标签的变化抽取会失效
+
+b)	新发现的大问题，如类别1602: 
+https://www.amazon.cn/%E6%91%84%E5%BD%B1-%E6%91%84%E5%83%8F/b/ref=sd_allcat_digita_l2_b755653051?ie=UTF8&node=755653051。
+其子类获取方式和之前的不一样，代码改进后还是没办法爬到他的子类，需要再调整。
+
+
+
+京东
+1.	目前存储位置和路径
+
+a)	同样是150的服务器，路径为: /home/zhangyt/ShopCrawler/JD，后文以此为根目录。
+
+b)	/code里面有三个文件，JDUrl为爬去目录页链接的，JDhtml为爬去商品页面，JDextract为信息抽取的。其中JDUrl需要根目录下的root.txt作为配置文件。
+
+
+c)	现在爬去的url，在aws ubuntu@54.223.210.254 (4digital.sh)，/mnt/sdc1/Linge/jd下面。还有一部分在aws ubuntu@54.223.112.226 (3awscn.crawler.sh)，/home/ubuntu/JD下面。目前还没有爬完。
+
+d)	更目录下有个list.csv，是用来更加直观的查询京东类目的，因为爬去的url和爬去商品页面输出，都是多级目录，如第一类第二子类第二孙子类，输出就是/1/2/2.txt。所以需要对照list.csv查看，有每个数字对应的中文。
+
+e)	目前的爬虫部署在aws ubuntu@54.223.210.254 (4digital.sh)，/mnt/sdc1/Linge/jd下面运行。
+
+
+
+2.	代码说明
+
+a)	JDUrl.py:
+这个代码没有任何问题，能够顺利的爬去所以目录列表里面的url，但有时候会卡主不动长达10分钟，可能需要手动退出。再通过save.csv继续爬。输入为root.txt配置文件，输出为多级目录下的txt文件，文件内每个获取的url为一行。
+
+本脚步，也包含save.csv文件，用来储存进度。格式为’int,int,int’英文逗号分割，分别代表，第一级类目，第二级类目，第三级类目。
+
+该存储文件没有存储第三类目的页数，所以如果程序断掉，需要手动删除刚才爬去的.txt文件，也就是删除’数字最大的更目录/数字最大的子目录/数字最大命名的txt文件’，然后再运行即可。
+同上如果从头开始，不需要读save.csv文件，需将程序中，靠头的全局变量’saveFlag’改为’False’。
+
+b)	JDhtmll.py:
+该文件输入为上个文件输出的一堆文件夹，会自动读取里面的txt，然后输出和亚马逊爬虫同样的html代码txt文件，存放在目录群里，目录群命名为’第一级目录_第二级类目_第三级类目/数字.txt’。
+
+同样有save.csv文件，格式为’int,int,int,int’前三个同上，为多级类目，随后一个为该txt下的第几行，也就是第几个商品。
+
+c)	JDextract:
+输入为含有html代码的txt，基本使用和亚马逊的抽取相同
+		同理第一行标题需要单独添加，如下:
+		Id,name,keyword,price,comment_count,category,parameter,description,detail
+		和之前一样，直接复制过去就行。
+
+3.	遗留问题
+a)	目前url还没爬完，需要继续爬。
+
+目前进度(截止07.28，18:50分):
+Amazon: 目前共爬47类，约472800条url，总进度40%左右。
+JD：目前共爬 1080类，4000000条，约总进度92%左右。
+
+
+nohup python3 -u ./JDhtml-0.3.py > jd.log 2>&1  &
+tail -f ./jd.log
+
+nohup python3 -u ./urlCrawler.py > amazon.log 2>&1  &
+tail -f ./amazon.log
+
+ps aux | grep python3
+kill -9 2893
+
+
+
+find ./contents -name *.txt  | wc –l                   
+找寻
+wc -l find ./name *.txt
+统计
+pip3 install --proxy http://109.105.1.52:8080 PIL  
+安装
+
+
+254
+/mnt/sdc1/Linge/jd/
+
+226
+/mnt/zhangli/JD/
+
+120
+/mnt/jd/
+
