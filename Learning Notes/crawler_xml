@@ -1,0 +1,22 @@
+
+# -*- coding:UTF-8 -*-
+
+import requests
+url = ''
+header = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
+
+response = requests.get(url,headers=header)
+print (response.text)   #文本
+html = response.content.decode('gbk') #字节流
+
+
+
+from lxml import etree
+doc = etree.HTML(html)     #html是趴下来的文本
+doc.xpath('//img/@src')  #主目录下img标签的src属性
+doc.xpath('//span/text')   #主目录下span标签的内容
+doc.xpath('//span[@class]')   #主目录下span标签中含有class属性
+doc.xpath('//span[@class="dgf_dg"]')     #主目录下span标签中含有class属性
+#列表返回    提取用  doc.xpath('//img/@src')[0]
+
+
