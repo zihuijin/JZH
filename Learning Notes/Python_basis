@@ -1,0 +1,586 @@
+# -*- coding:utf8 -*-
+'''
+only basis01
+'''
+# #格式化----------------
+# print ('我今天买了{}块的菜，走了{}里路，做了{}辆车'.format(12,34,56))
+# print ('我今天买了%d块的菜，走了%d里的路，做了%s的车'%(1,2,'一天'))
+# #输入输出-------------------
+# a=input()
+# print(a)   #python3里输出input必加（）
+# # 数字运算符---------------
+# print(6/3,2*3,5%2,2**3)
+# a=2
+# a+=3
+# print (a)
+# #比较较操作符---------------
+# a=2
+# if a==2 and a>1:
+#     print (a)
+# else:
+#     print(a+2)
+# #条件语句------------
+# a=eval(input())   #python3的input（）返回的是字符串型，要加上eval（）自动变换
+# if a<100:
+#     print (a)
+# elif a<200:
+#     print (a+2)
+# elif a<300:
+#     print (a+3)
+# else:
+#     print (a**2)
+#
+
+# # 循环------------------------
+# while--满足条件才循环
+# a=0
+# while a<10:
+#     print (a)
+#     a+=1
+
+# #迭代for---按照顺序访问列表的每一项----------
+#
+# a=range(10)
+# for i in a:
+#     print (i)
+#
+# # #跳出循环----------------------------
+# # break跳出整个循环
+# # continue 跳出本次循环
+# a = [[1, 2, 3], [4, 5, 0]]
+# for i in a:
+#     for j in i:
+#         if j<=4:
+#             print (j)
+#         else:
+#             continue
+# #
+#
+# b=[[2,3,4,5],[6,7,8,9]]
+# for i in b:
+#     for j in i :
+#         if j<7:
+#             print (j)
+#         else:
+#             break
+
+# 序列：（有序—有下标，可以分片a[1:3:2],相加是合并，乘数是复制，）
+# 1字符串（str）:内容不可修改，用‘’，或“”表示，特殊需要加'|'
+# 2列表（list）：相当于有序数组，下表从0开始，可以存放不同类型的数据，可以动态的改变[]
+# 3元祖（tuple）：与列表相似，但是内容长度不可更改，用（）
+# 字典（dict）:键值对组成，键不可变
+# 集合（set）：做交并运算
+# 函数: define 函数名（参数）：，通常封装为一个元祖返回，return后结束
+# 类（class）:class 类名（继承类）：
+
+# 列表————序列中只有列表才可随意更改--------------------------
+# 1创建列表
+# a=[1,2,3,'rt',True]
+# b=list(range(1,10))  #python3 range不属于list
+# print (max(b))
+# #2进行加法或乘法运算
+# print(a+b,a*3)
+# #下标访问,切片访问(左开右闭)
+# print(a[0],a[0:3],a[-2],a[1:],a[:3],a[::-1]) #a[::-1]是将列表反过来
+# 列表函数
+# a.append(6) #末尾追加
+# print(a)
+# a.clear()  #清除
+# print(a)
+# b=a.copy()
+# c=a.count(1)  #统计元素出现次数
+# a.extend(b)       #追加一个列表
+# d=a.index(3)   #统计元素第一次出现的坐标
+# a.insert(2,5)   #在第2个位置添加数据5
+# a.pop(2)     #删除第二个位置上的数
+# a.remove(2)   #删除第一次出现的2
+# a.reverse()   #翻转列表
+# b=[3,5,1,8,2]
+# b.sort()   #直接进行数值排序（从小到大）
+# print(b)
+# c=['asdf','fgh','dfgdfgs','ds']
+# c.sort(key=len)  #可以决定排序的规则
+# print(c)
+# del a[0]
+# print (sum(b),a)
+
+# for i,j in enumerate(a):
+#     print(str(i)+':'+str(j))    #分离下标及内容
+
+
+# range小例子
+# w=range(-5,6)
+# for i in w:
+#     if i<0:
+#         print (abs(i))
+#     else:
+#         print(i**2, end='')
+
+# 元组------------------------------
+# 1.元组内容不能修改，删除eg a[0]=3,del a[3]
+# 2.z只有一个元素时元组要加a=(1,)
+# a=(1,)
+# print (a,type(a))
+# 3.tuple,tuple,tuple()将其他序列装化成元组
+# a=[1,2,3]
+# b=tuple(a)
+# print(b)
+# 4--不加（）也是元组
+# a=1,2,3,4
+# print (type(a))
+# 5，元组折包
+# a=(1,2,3)
+# x,y,z=a
+# print (x,y,z)
+# a=(1,2,3,4)
+# print(a.index(1))---INDEX(数值)显示数值的索引
+
+
+# 字符串（1有下标，2不可更改）----------------------------
+# a='apple'
+# print  (a[0])
+# 3可用于合并复制
+# b='adsgf'+'agfds'
+# a='asdf'*2
+# print (a,b)
+# 4.将序列里的字符串用符号连在一起
+# a=['s','r','f']
+# print (' '.join(a))
+# print ('**'.join(a))
+
+
+# 字典dictionary  dict  {}-----------------------------其实字典是将键hash成数字来查询的，但是可hash的必须是不可变的
+# 1.是由键值对组成的，无序（没有时间顺序），可以添加，按键查找
+# a={1:'a',2:'b',3:'c'}
+# 2.key必须是不可变de，不能用列表，访问用key做下标
+# 3.用dict()，创建字典
+# a=dict(1='a',2='b',3='c')  ??????????????
+# 4.键是唯一的，如果出现重复，以最后一个为准
+# a={1:'a',2:'b',1:'c'}
+# print(a)
+# 5.如果查询的键不在会keyerror,判断key 在不在字典中
+# print(1 in a)
+# print(2 in a)
+# print (3 in a)
+# 6可以用for遍历
+# for i in a:
+#     print(i,a[i])
+# 7.也可以用items（）分离键值对
+# for key,value in a.items():
+#     print(key,':',value)
+# 8.keys,values,返回所有的键或值
+# print (a.keys(),a.values())
+# 9.访问（适用于不知道有没有这个键）
+# print (a.get(1,'null'))   #如果有返回键对应值，如果没有返回null
+# print (a.get(5,'null'))
+# 10.插入键值
+# a.setdefault(4,'d')  #如果没有4这个键，就插入，如果有返回原先的对应值
+# a.setdefault(2,'d')
+# print(a)
+# a[4]='d'    #也可以直接插入
+# print (a)
+# 11.更新 update（）
+# b={5:'e'}
+# a.update(b)   #将b字典的值更新到a字典里，如果有相同的将替换
+# print(a)
+# 12.清空字典 clear（）
+# a.clear()
+# print (a)
+# 13.深复制与浅复制
+# b=a.copy()   #浅复制，普通复制，与原来字典无关
+# c=a     #深复制，现在字典与原字典相关联
+# b[5]='e'
+# c[5]='w'
+# print(a,b,c)
+
+# 集合,分为可变集合set（），与不可变集合frozenset()--------------------------
+# 1.集合无序（没有时间先后顺序）
+# 2.集合创建用set（），参数为序列
+# a = set([1,2,3,4])
+# b = set([1,2,5,6])
+# b=set('qwert')
+# c=set((1,2,4))
+# print(a,b,c)
+# 3.集合元素不重复
+# d=set('asdfasdf')
+# print(d)
+# 4.不支持索引下标与切片，只要任务为做交并集
+# 5.访问用for语句
+# for i in a:
+#     print (i,end=',')
+#6.集合内置函数
+# b=set([7,8])
+# a.update(b)   #更新
+# print(a)
+# a.remove(1)  #删除元素
+# print(a)
+# b=a.copy()  #复制
+# print(b)
+# c=a
+# c.remove(2)
+# print(a,c)
+# a.add(5)    #添加
+# print(a)
+#7。集合的运算
+# print(a&b,a|b,a-b)
+
+
+# 编码解码----------------------------------------
+# 因为如果原先是unicode编码的话解码会出现错误，所以判断是否为unicode 用 isinstance(str,'code')
+# if isinstance(a,'unicode'):
+#     a.encode('utf-8')
+# else:
+#     a.decode('gbk').encode('utf-8')
+
+# 列表解析器（生成新列表）------------------------------
+
+# r=[i+4 if i<0 else i-9 for i in w]
+# print (r)
+
+
+# 函数-------------------------------------------------------
+# 1.将对象传入函数
+# a.apply(函数名)
+#2.定义函数
+#def 函数名（形参1，形参2，。。。）形参起到接受调用时的传递参数
+#3.参数没有类型，因为python时弱类型的，不支持重载（只要参数不同，函数名相同也不是一个函数），函数名相同会后边覆盖前边
+#4.位置参数与关键字参数，位置是对应位置，关键字是指定（key=''）
+# def funA(x,y,z):
+#     print (x,y,z)
+# funA(1,2,3)  #位置参数，按照先后位置传递值
+# funA(y=1,x=2,z=3)   #关键字参数，指定值位置
+#5.*，**   *args   ,  **kwargs
+#5.1定义函数    *args——用元组收集不匹配的位置参数    **kwargs——用字典收集不匹配的关键字参数(*,**是让函数接受任意参数)
+# def funA(x,y,*args,**kwargs):
+#     print (x,y,args,kwargs)
+# funA(1,2,3,4,a=5,b=6)
+#5.2 .调用函数，（*，**—是来解包参数的）   *—将序列打散，解包    ，**—将字典打散，输出值
+# def fanc(x,y,z):
+#     print (x,y,z)
+# a=[1,2,3]
+# b={'x':1,'y':2,'z':3}
+# fanc(*a)
+# fanc(**b)
+#6.return   作用是函数返回，作为函数结束,可以用一个变量接收也可以用多个变量接收
+# def func(x,y):
+#     return (x+1,y+2)
+# print(func(2,3))
+# a,b=func(1,2)
+# print(a,b)
+#7.变量的作用域  ：LEGB原则（local(本地),enclose（上层嵌套函数）,globel（全局）,build-in（内置作用域））
+#8.函数的文档属性(是整个函数的解释说明)  func.__doc__
+# def func():
+#     '''
+#     asefasd
+#     asdfgadf
+#     asffa
+#     '''
+# print (func.__doc__)
+#9.函数的嵌套与闭包（能够保留函数定义时的环境信息）
+# def f(x):
+#     y=100
+#     def inner(z):
+#         print (x+y+z)
+#     return inner
+# c=f(10)
+# c(3)
+
+#10.装饰器  @decorator             ????????????????????????---------------------
+#11.迭代器 (iterator )：实现迭代协议的对象（用next（）方法会前进到下一个结果，末尾引发stopiteration）-------------------------------
+#11.1迭代包(itertools)
+# import itertools
+# a=itertools.combinations(range(4),3)    #组合（从小到大）
+# for i in a:
+#     print (i)
+
+# b=itertools.accumulate(range(4))   #累加
+# for i in b:
+#     print (i)
+
+# c=itertools.repeat(range(4),3)    #累加
+# for i in c:
+#     print (i)
+
+# d=itertools.product('ab', range(3))   #笛卡尔积:交互配对
+# for i in d:
+#     print (i)
+
+# e=itertools.permutations(range(4),3)   #序列
+# for i in e:
+#     print (i)
+
+#生成器(generator):能生成迭代对象-----------------------------------------------------
+#生成器创建方法：1，生成器表达式    2.生成器函数 yield
+# a=(i+2 for i in range(5) if i>2)    #可以一步形成迭代的筛选与转换
+# for i in a:
+#     print (i)
+
+# b=(i*2 if i>3 else i*1/2 for i in range(6))
+# for i in b:
+#     print (i)
+# a=range(5)
+# def func(a):
+#     for i in a:
+#         yield i+2
+# for i in func(a):
+#     print (i)
+
+#类   class A(object):
+
+# class people(object):
+#     nation='china'
+#     def __init__(self,name):
+#         self._name=name
+#     def get(self):
+#         print (self._name)
+# a=people('bob')
+# a.get()
+# a._name
+# print(people.nation)
+
+
+
+#装饰器：装饰器本身也是一个函数，但是他可以让其他函数在不做代码变动的前提下增加额外功能----------------------------------------------
+# 装饰器的返回值也是一个函数对象，可以抽离大量与函数功能无关的雷同代码
+#1.简单函数装饰器(不带参数)
+# def c_name(func):   #装饰器是闭包的应用，外层函数返回内层函数
+#     def wrapper(*args,**kwargs):
+#         print ('c')
+#         return func(*args,**kwargs)
+#     return wrapper
+#
+# @c_name     #@c_name   是装饰器的语法糖，避免再一次赋值操作，相当于 a=c_name(a)
+# def a():
+#     print ('a')
+# print (a.__name__)  #wrapper
+
+# from functools import wraps   #因为装饰器覆盖了原函数，所以我们用wraps，使装饰器函数也有原函数一样的元信息
+# def c_name(func):
+#     @wraps(func)
+#     def wrapper(*args,**kwargs):
+#         print ('c')
+#         return func(*args,**kwargs)
+#     return wrapper
+# def a():
+#     print ('a')
+# print (a.__name__)   #a
+#带参数的函数装饰器——————其实是将c_name装饰器函数封装
+# def v(o):
+#     def  c_name (func):
+#         def wrapper(*args,**kwargs):
+#             if o=='o':
+#                 print ('c')
+#             return func(*args,**kwargs)
+#         return wrapper
+#     return c_name
+
+
+# @v('o')
+# def b():
+#     print('b')
+#
+# b()
+
+#3.类装饰器
+# class Foo(object):
+#     def __init__(self,func):
+#         self.func=func
+#     def __call__(self):
+#         print('class decorator runing')
+#         self.func()
+#         print ('class decorator ending')
+#
+# @Foo           #使用@形式将装饰器附加到函数上，就会自动调用__call__方法，相当于bar=Foo(),然后再调用__call__方法
+# def bar():
+#     print ('bar')
+# bar()
+
+
+#4.装饰器的顺序
+# @a
+# @b
+# @c
+# def f():
+# f=a(b(c(f)))
+
+
+#  继承 （super继承的应用）
+
+# class  A(object):
+#     def __init__(self):
+#          self.namea='aaa'
+#     def funca(self):
+#         print(self.namea)
+# class B(A):
+#     def __init__(self):
+#         super(B,self).__init__()   #如果父子类都有构造函数
+#         self.nameb = 'bbb'
+#     def funcb(self):
+#         print(self.nameb)
+# e=B()
+# print(e.nameb)
+# e.funca()
+# e.funcb()
+
+# class A(object):
+#     def __init__(self,a):
+#         self.name = a
+#     def geta(self):
+#         print ('输出a: {}'.format(self.name))
+#
+# class B(A):
+#     def __init__(self,a,b):
+#         self.name = b
+#         super(B,self).__init__(a)
+#     def getb(self):
+#         print ('输出b: %s'%(self.name))
+
+# b=B(1,2)
+# b.getb()
+# b.geta()
+
+
+#文件操作——————————————————————————————————————
+#1.打开文件,默认模式为r—只读模式
+# with open('isisTestset.txt') as f:
+#     # print(f.readlines())
+#     print (f.read())
+#
+# 相当于 f=open('isisTestset.txt')
+#       f.close()
+#2.w-只写模式，a-追加
+# with open('isisTestset.txt','a') as f:
+#     f.write('adsfgdfg')
+
+# with open('Testset.txt','r+') as f:   #r+,w+,a+ 都是读写模式，f.name-文件名称，f.mode-文件打开方式
+#     print(f.read(),'/',f.name,'/',f.mode,'/',f.tell())      #f.tell-是当前文档指针位置
+#     f.seek(5,0)        #修改当前文档指针
+#     print(f.read())
+
+#问题：write后指针到达底部，再read就为空，所以我们先将指针移动到开始
+with open('T.txt','r+') as f:
+    f.write('agadsg\nawertadtwer\nasfasf\n')
+    f.seek(0,0)
+    print (f.readline())
+
+
+
+
+
+#eg——————————————————————————————————————————
+#可以一下赋值（增强赋值）
+# a=b=[]
+# a=b=c=d=3
+# print (a,b,c,d)
+#
+# #共享引用
+# a=[1,2,3]
+# b=a
+# a+=[4,5]       #一齐变化
+# a=a+[4,5]    #只是a变化
+# print(a,b)
+
+#a=1;print(a)    #一行两个语句用 ；隔开-----------------
+#b='aergsfgagag\
+# asdgadfg'      #多行一个语句用 \ 隔开
+
+#指定编译器--------------------
+#  -*- coding: UTF-8 -*- 或者 #coding=utf-8
+
+#python 3 默认源码文件为utf-8 ，所以不用指定编码了
+
+# print(b,end=', ')   #print默认隔行输出 python2 用 ， python3 用end=‘ ’---------------
+# print(b)
+#eg--------
+# a=[1,2,3,4]
+# n=a.pop()
+# print(a,n)
+
+#True,False,None----一般关键字都会小写，只有这三个比较特殊------------------------
+#_name   有单一下划线的变量名不能被 from h import * 引用
+#__name__  这是系统变量
+#__name   这是类的本地变量
+#类变量名以大写字母开头，模块变量名以小写字母开头
+
+#eg :9*9乘法表
+#for--
+# for i in range(1,10):
+#     for j in range(i,10):
+#         print ('{} * {} = {}'.format(i,j,i*j))
+
+#while----
+# i=0
+# while i<9:
+#     i+=1
+#     j=i
+#     while j<10:
+#         print ('%d * %d =%d '%(i,j,i*j))
+#         j += 1
+
+#输入数字三角--------------
+# for i in range(1,10):
+#     for j in range(1,i+1):
+#         print (j,end=' ')
+#     print()
+
+#组合排序1，2，3，4，组成三位数
+# a=[1,2,3,4]
+# b=[]
+# for i in a:
+#     for j in a:
+#         for z in a:
+#             if (i!=j and i!=z and j!=z):
+#                 print (i,j,z)
+#                 b.append(i*100+j*10+z)
+# print(len(b))
+
+#时间模块---------
+#1时间戳：从1970年到现在的秒数
+# import time
+# strp = time.time()
+# print(round(strp,2))
+#2.时间元组（九组数字）
+#tm_year ,tm_mom , tm_mday ,tm_hour ,tm_min ,tm_sec ,tm_wday ,tm_yday, tm_isdst
+#将时间戳转化为时间元组用localtime
+# local_time=time.localtime(time.time())
+# print(local_time)
+
+
+
+#  Python的 os模块 提供了帮你执行文件处理操作的方法，比如重命名和删除文件。
+# import os
+# # os.rename('T.txt', 'Ta.txt')
+# # os.remove('T.txt')
+# # os.mkdir('dir')
+# print(os.getcwd())
+
+
+
+#正则
+
+# import re
+# str = 'python is my love'
+# a = re.compile('py')#compile只会从开头匹配，如果不是开头的字符串，那么将不会匹配成功
+# b = a.match(str)#指定被匹配的对象
+# print (u'被匹配的对象：',b.string)
+# print( u'匹配上的字符串位置索引：',b.span())
+# print (u'需要匹配的字符串：',b.group())
+# print ('-------------------------------')
+# c = re.search('love',str)#search可以匹配任意位置的字符串，会对整个匹配对象进行扫描
+# print (u'被匹配的对象：',c.string)
+# print (u'匹配上的字符串位置索引：',c.span())
+# print (u'需要匹配的字符串：',c.group())
+# print( '-------------------------------')
+# d = re.sub('love','world',str)#sub方法会对匹配到的内容进行替换（注意：是替换所有匹配到的内容），类似字符串的replace方法
+# print (d)
+
+
+
+#字符串
+#str.find(str, beg=0, end=len(string))       #检查字符串中是否包含子字符串，如果包含子字符串返回开始的索引值，否则返回-1。
+#str -- 指定检索的字符串
+# beg -- 开始索引，默认为0。
+# end -- 结束索引，默认为字符串的长度。
+#eg：
+# if a.find('df'):
+#     pass
