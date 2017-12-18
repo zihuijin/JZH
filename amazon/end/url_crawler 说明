@@ -1,0 +1,104 @@
+对urlCrawler.py  关于大类目，不正常页面识别以及验证码方面的调整
+运行环境:
+	os: Ubuntu
+	语言: python3.6 (代码必须运行在python3上)
+	需要安装的包：selenium, pyvirtualdisplay, urllib，pillow（PIL）
+pip3 install  pandas selenium pyvirtualdisplay pillow
+sudo apt install xvfb
+
+	原始代码及其解说在‘原始程序’文件夹里
+	更改的url代码在‘更改爬虫url程序’文件夹里
+
+读取存储总结:
+‘加上了验证码的识别（fd）.py’代码是读取fd.csv,格式是‘int，int，url’第一个int是第几个小类目，第二个是爬取类目的代码，第三个是类目url
+然后生成save.fd.csv,格式是‘int，url’第一个是第几个类，第二个是类目的url
+
+
+（1）	不正常页面识别
+参照原程序goodsCrawler.py 关于不正常页面识别，添加了三个不正常页面
+第一个是显示错误：‘您输入的网址在我们的网站上无法正常显示网页’
+第二个是没爬取完全
+第三个是应对amazon的反爬虫方式：验证码的提交，他会出现‘抱歉，我们只是想确认一下当前访问者并非自动程序’
+
+--------------------------------------------------------------------------------------------------------------------
+if html.find('您输入的网址在我们的网站上无法正常显示网页')!= -1:
+    print('good is missing')
+    html=""
+elif len(html) < 1024 * 5:
+    print('block 2...',len(html))
+    raise RuntimeError()
+else:
+    while(html.find('抱歉，我们只是想确认一下当前访问者并非自动程序')) != -1:
+        print('block 1...')
+        f= open('tmp/fp.txt','w')
+        f.write(html)
+        f.close()
+
+        #找正则表达式
+        pi = r'<img src="(.*?)" />'
+        pi_url = re.findall(pi, str(html), re.S | re.M)     #findall下是一个列表
+        #获取图片
+        if len(pi_url) > 0:
+            data = urllib.request.urlopen(pi_url[0]).read()
+            address = 'pi/pi.jpg'
+            w = open(address, 'wb')
+            w.write(data)
+            w.close()
+
+            de  = main(address)
+        else:
+            print('pi_url is null')
+        #输入验证码
+        driver.find_element_by_id("captchacharacters").send_keys(str(de))
+        # driver.find_element_by_name("继续购物").click()
+	#找到提交
+        driver.find_element_by_class_name('a-button-text').click()
+#等待
+        time.sleep(0.5)
+
+        driver.get(driver.current_url.replace('amp;', '').replace('&th=1', ''))
+
+        # 打印当前网址
+        print(driver.current_url)
+        html = driver.page_source.encode('utf-8', 'ignore').decode()
+break
+-----------------------------------------------------------------------------------------
+（2）	针对不正常的大类目的url
+https://www.amazon.cn/%E6%91%84%E5%BD%B1-%E6%91%84%E5%83%8F/b/ref=sd_allcat_digita_l2_b755653051?ie=UTF8&node=755653051。
+
+因为每个大类目的形式都不相同，所以我采取了手动寻找的方法，将每个大类目的小类目的url用‘amazon new add fix - 记录进度’记录下来，然后转化成csv格式，用于程序读取
+（3）	验证码的识别
+我参考了网上关于amazon验证码的识别，因为amazon验证码颜色单一（黑字白体），然后都是大写字母，所以我们用https://www.cnblogs.com/TTyb/p/6156395.html?from=timeline&isappinstalled=0
+这个网址的方法，总体思路是先纯化图片使其变成真正两色，然后切割，然后用余弦相似度将切割的图片一个个与图片库对比，将最相近的图片对应的字母返回回来，虽然对比花费时间长，但是准确率很高。
+程序运行的文件存储在 验证码—>程序文件中，其中‘iconset1’是图片库，‘pi’是临时存储当前图片的地方（我的思路是先把图片下下来，然后交给main函数识别，然后再验证页面提交字母，我用了while循环：如果提交正确，则正常运行，如果错误会再出现识别页面，接着识别） 
+原程序添加是：
+class VectorCompare，def buildvector(im)，def main(item)，以及
+iconset = ['a','b','c','e','f','g','h','j','k','l','m','n','p','r','t','u','x','y']
+imageset = []
+for letter in iconset:
+    for img in os.listdir('iconset1/%s/' % (letter)):
+        temp = []
+        if img != "":
+            temp.append(buildvector(Image.open("iconset1/%s/%s" % (letter, img))))
+        imageset.append({letter: temp})
+
+
+
+补充：
+在linux里运行的代码
+nohup python3 -u ./urlCrawler.py > amazon.log 2>&1  &
+（后台运行urlCrawler.py，将输出保存在amazon.log里）
+tail -f ./amazon.log
+（显示在amazon.log里的输出）
+ps aux | grep python3
+（查看正在运行的程序）
+kill -9 2893
+（删除正在运行的程序）
+find ./contents -name *.txt  | wc –l                   
+找寻
+wc -l find ./name *.txt
+统计
+pip3 install --proxy http://109.105.1.52:8080 PIL  
+安装
+
+
