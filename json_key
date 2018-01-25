@@ -1,0 +1,124 @@
+# coding:utf-8
+import re
+import json
+
+
+
+
+num = 0
+big_list = []
+with open('comp_char_amb.dev',encoding='utf-8') as f:
+    content = f.read()
+    #print(content)
+    #将句子隔断
+    c_list = re.findall(r'(.*?)\n\n',str(content)+'\n\n',re.S)
+    big_key_list = []
+    sen_big_list = []
+    #循环每个句子
+    for c in c_list:
+        sen_list = []
+
+
+
+        print(c,'************')
+        #nn 表示一共有几个标记
+        nn = len(re.findall(r'B-',c))
+        print('****nn*****',nn)
+
+        # if nn==1:-----------------------
+        # 将每行隔断
+
+        t_list = re.findall(r'(.*?)\n',c+'\n',re.S)
+        a_list = re.findall(r'.*?I-\d{4}\n. O',c+'\n',re.S)
+        key_num = 0
+
+        #遍历每个字
+        for t in t_list:
+            sen_list.append(t[0])
+        sentence = ''.join(sen_list)
+        print(sentence)
+        sen_big_list.append(sentence)
+
+
+        key_list2 = []
+        # 遍历每一个含key片段a
+        for a in a_list:
+            print(a,'------------')
+            t1_list = re.findall(r'(.*?)\n', a + '\n')
+            key_list = []
+
+            key_num+=1
+            #遍历每一个字t1
+            for t1 in t1_list:
+                print(t1,'//////')
+                try:
+                    if t1[2]!='O':
+                        key_list.append(t1[0])
+                except IndexError as e:
+                    print(e,'========')
+            key = ''.join(key_list)
+            print(key,key_num,'>>>>>>>>>>>>>>>>>>')
+            key_list2.append(key)
+        print(key_list2,'key')
+        big_key_list.append(key_list2)
+        # print(big_key_list,']]]]]]]]')
+
+
+
+
+for dic_num in range(len(sen_big_list)):
+    num = dic_num+1
+    big_dic = {}
+    tags_list = []
+    print(sen_big_list[dic_num])
+    big_dic['text'] = sen_big_list[dic_num]
+    big_dic['file_id'] = num
+    key = big_key_list[dic_num]
+    if len(key)==0:
+        tags_dic = {}
+
+        tags_dic['entity_text'] = ''
+        tags_dic['entity_offset_first_char'] = ''
+        tags_dic['entity_offset_last_char'] = ''
+        tags_dic['category_name'] = "COMPONENT"
+
+
+
+            # elif len(key)==1:
+            #     key_fn = sentence.find(key)
+            #     key_ln = key_fn + len(key) - 1
+            #
+            #     print(key)
+            #     print(key_fn, key_ln)
+            #     tags_dic['entity_text'] = key
+            #     tags_dic['entity_offset_first_char'] = key_fn
+            #     tags_dic['entity_offset_last_char'] = key_ln
+            #     tags_dic['category_name'] = "COMPONENT"
+    else:
+
+        for k in key:
+            tags_dic = {}
+            key_fn = sen_big_list[dic_num].find(k)
+            key_ln = key_fn + len(k) - 1
+
+            print(k)
+            print(key_fn, key_ln)
+            tags_dic['entity_text'] = k
+            tags_dic['entity_offset_first_char'] = key_fn
+            tags_dic['entity_offset_last_char'] = key_ln
+            tags_dic['category_name'] = "COMPONENT"
+            tags_list.append(tags_dic)
+
+
+    big_dic['tags'] = tags_list
+    big_list.append(big_dic)
+
+
+big_json = json.dumps(big_list, ensure_ascii=False, indent=4)
+
+with open('key.json', 'w',encoding='utf-8') as w:
+    w.write(big_json)
+
+print('end......')
+
+
